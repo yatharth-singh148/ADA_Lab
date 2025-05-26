@@ -1,61 +1,52 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-// Function to heapify a subtree rooted at index i
-void heapify(int arr[], int n, int i) {
-    int largest = i;        // Initialize largest as root
-    int left = 2 * i + 1;   // Left child index
-    int right = 2 * i + 2;  // Right child index
+void heapify(int a[], int n, int i) {
+    int largest = i, left = 2*i + 1, right = 2*i + 2;
 
-    if (left < n && arr[left] > arr[largest])
+    if (left < n && a[left] > a[largest])
         largest = left;
-    
-    if (right < n && arr[right] > arr[largest])
+    if (right < n && a[right] > a[largest])
         largest = right;
-    
+
     if (largest != i) {
-        // Swap and continue heapifying
-        int temp = arr[i];
-        arr[i] = arr[largest];
-        arr[largest] = temp;
-
-        heapify(arr, n, largest);
+        int temp = a[i]; a[i] = a[largest]; a[largest] = temp;
+        heapify(a, n, largest);
     }
 }
 
-// Main function to perform heap sort
-void heapSort(int arr[], int n) {
-    // Build max heap
-    for (int i = n / 2 - 1; i >= 0; i--)
-        heapify(arr, n, i);
-    
-    // Extract elements from heap
+void heapSort(int a[], int n) {
+    for (int i = n/2 - 1; i >= 0; i--)
+        heapify(a, n, i);
+
     for (int i = n - 1; i > 0; i--) {
-        // Swap current root with end
-        int temp = arr[0];
-        arr[0] = arr[i];
-        arr[i] = temp;
-
-        // Heapify reduced heap
-        heapify(arr, i, 0);
+        int temp = a[0]; a[0] = a[i]; a[i] = temp;
+        heapify(a, i, 0);
     }
 }
 
-// Function to print an array
-void printArray(int arr[], int n) {
-    for (int i = 0; i < n; i++)
-        printf("%d ", arr[i]);
-    printf("\n");
-}
-
-// Example usage
 int main() {
-    int arr[] = {12, 11, 13, 5, 6, 7};
-    int n = sizeof(arr) / sizeof(arr[0]);
+    int n;
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
 
-    heapSort(arr, n);
+    int a[n];
+    printf("Enter %d integers:\n", n);
+    for (int i = 0; i < n; i++)
+        scanf("%d", &a[i]);
 
-    printf("Sorted array: ");
-    printArray(arr, n);
+    clock_t start = clock();
+    heapSort(a, n);
+    clock_t end = clock();
+
+    printf("Sorted array:\n");
+    for (int i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+
+    double time_taken = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Time taken: %f seconds\n", time_taken);
 
     return 0;
 }
